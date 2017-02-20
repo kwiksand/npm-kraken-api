@@ -134,14 +134,14 @@ function KrakenClient(key, secret, otp) {
 				var data;
 
 				if(error) {
-					return callback.call(self, new Error('Error in server response: ' + JSON.stringify(error)), null);
+					return callback.call(self, new Error('(' + response.statusCode + ') Error in server response: ' + JSON.stringify(error)), null);
 				}
 
 				try {
 					data = JSON.parse(body);
 				}
 				catch(e) {
-					return callback.call(self, new Error('Could not understand response from server: ' + body), null);
+					return callback.call(self, new Error('(' + response.statusCode + ') Could not understand response from server: ' + body), null);
 				}
 				//If any errors occured, Kraken will give back an array with error strings under
 				//the key "error". We should then propagate back the error message as a proper error.
@@ -154,7 +154,9 @@ function KrakenClient(key, secret, otp) {
 						}
 					});
 					if (krakenError) {
-						return callback.call(self, new Error('Kraken API returned error: ' + krakenError), null);
+//                        console.log(JSON.stringify(data.error, null, 4));
+//                        console.log(JSON.stringify(response, null, 4));
+						return callback.call(self, new Error('(' + response.statusCode + ') Kraken API returned error: ' + krakenError), null);
 					}
 				}
 				else {
