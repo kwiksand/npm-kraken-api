@@ -133,9 +133,13 @@ function KrakenClient(key, secret, otp) {
 			if(typeof callback === 'function') {
 				var data;
 
-				if(error) {
-					return callback.call(self, new Error('(' + response.statusCode + ') Error in server response: ' + JSON.stringify(error)), null);
-				}
+                if(error) {
+                    if (response) {
+                        return callback.call(self, new Error('(' + response.statusCode + ') Error in server response: ' + JSON.stringify(error)), null);
+                    } else {
+                        return callback.call(self, new Error('Error: ' + JSON.stringify(error)), null);
+                    }
+                }
 
 				try {
 					data = JSON.parse(body);
